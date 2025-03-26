@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
@@ -28,8 +27,10 @@ import {
 } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/context/AuthContext';
+import { toast } from 'sonner';
+import TopUpModal from '@/components/wallet/TopUpModal';
 
-// Mock data for wallet dashboard
 const walletStats = {
   totalBalance: 145700.00,
   outstandingCredit: 58250.00,
@@ -40,7 +41,6 @@ const walletStats = {
   weeklyOutflow: 28500.00
 };
 
-// Mock data for transactions
 const transactions = [
   {
     id: "TRX1001",
@@ -134,14 +134,55 @@ const getTransactionIcon = (type: string) => {
 
 const WalletPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [isTopUpModalOpen, setIsTopUpModalOpen] = useState(false);
+  const { user } = useAuth();
+  
+  const handleTopUp = (amount: number, method: string) => {
+    console.log(`Top up of $${amount} via ${method}`);
+    
+    const newTransaction = {
+      id: `TRX${Math.floor(Math.random() * 10000)}`,
+      agent: {
+        id: user?.id || "unknown",
+        name: user?.name || "Current User",
+      },
+      type: "deposit",
+      amount: amount,
+      method: method,
+      status: "completed",
+      date: new Date().toISOString(),
+      reference: `TOP-${Date.now()}`
+    };
+    
+    toast.success(`Successfully added $${amount.toLocaleString()} to your wallet`);
+  };
   
   return (
     <div className="animate-fade-in">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Wallet Management</h1>
-        <p className="text-muted-foreground">
-          Monitor and manage agent wallet balances, credit limits, and financial transactions.
-        </p>
+      <div className="flex justify-between items-start mb-6">
+        <div className="flex flex-col gap-2">
+          <h1 className="text-3xl font-bold tracking-tight">Wallet Management</h1>
+          <p className="text-muted-foreground">
+            Monitor and manage agent wallet balances, credit limits, and financial transactions.
+          </p>
+        </div>
+        
+        <div className="flex gap-3">
+          <Button 
+            variant="outline" 
+            onClick={() => setIsTopUpModalOpen(true)}
+            className="gap-2"
+          >
+            <Plus className="h-4 w-4" />
+            Top Up
+          </Button>
+          {user?.role === 'admin' && (
+            <Button className="gap-2">
+              <Wallet className="h-4 w-4" />
+              Manage Credits
+            </Button>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mt-6">
@@ -410,6 +451,12 @@ const WalletPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+      
+      <TopUpModal 
+        isOpen={isTopUpModalOpen}
+        onClose={() => setIsTopUpModalOpen(false)}
+        onTopUp={handleTopUp}
+      />
     </div>
   );
 };
