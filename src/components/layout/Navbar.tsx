@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { cn } from '@/lib/utils';
 import { 
@@ -9,7 +9,17 @@ import {
   Menu, 
   User, 
   Bell, 
-  Search
+  Search,
+  LayoutDashboard,
+  Map,
+  Ticket,
+  Users,
+  Wallet,
+  Calendar,
+  CreditCard,
+  BarChart,
+  Settings,
+  UserPlus
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -17,10 +27,22 @@ import {
   DropdownMenuItem, 
   DropdownMenuLabel, 
   DropdownMenuSeparator, 
-  DropdownMenuTrigger 
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubTrigger,
+  DropdownMenuSubContent,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -29,20 +51,153 @@ interface NavbarProps {
 const Navbar = ({ toggleSidebar }: NavbarProps) => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [showSearch, setShowSearch] = useState(false);
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
     <div className="fixed top-0 left-0 right-0 h-16 z-40 glass-morphism border-b border-border/40 px-4 flex items-center justify-between">
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         <Button 
           variant="ghost" 
           size="icon" 
           onClick={toggleSidebar}
-          className="mr-2 text-foreground/80 hover:text-foreground transition-colors"
+          className="text-foreground/80 hover:text-foreground transition-colors"
         >
           <Menu className="h-5 w-5" />
         </Button>
         <div className="font-semibold text-lg">TourConnect</div>
+
+        <NavigationMenu className="hidden md:flex">
+          <NavigationMenuList>
+            <NavigationMenuItem>
+              <NavLink to="/">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <LayoutDashboard className="w-4 h-4 mr-2" />
+                  Dashboard
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/attractions">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/attractions') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <Map className="w-4 h-4 mr-2" />
+                  Attractions
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/tickets">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/tickets') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <Ticket className="w-4 h-4 mr-2" />
+                  Tickets
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavigationMenuTrigger className={isActive('/agents') ? "bg-accent text-accent-foreground" : ""}>
+                <Users className="w-4 h-4 mr-2" />
+                Agents
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-2 p-2">
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <NavLink 
+                        to="/agents" 
+                        className={cn(
+                          "flex items-center gap-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
+                          isActive('/agents') && "bg-accent text-accent-foreground"
+                        )}
+                      >
+                        <Users className="w-4 h-4" />
+                        <span>All Agents</span>
+                      </NavLink>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start"
+                        onClick={() => {
+                          // Handle create user action
+                          const agentId = "current-agent-id"; // In a real app, get the current agent ID
+                          const agentName = "Current Agent"; // In a real app, get the current agent name
+                          navigate(`/agents?action=add-user&agentId=${agentId}&agentName=${encodeURIComponent(agentName)}`);
+                        }}
+                      >
+                        <UserPlus className="w-4 h-4 mr-2" />
+                        <span>Create User</span>
+                      </Button>
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/wallet">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/wallet') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <Wallet className="w-4 h-4 mr-2" />
+                  Wallet
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/bookings">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/bookings') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <Calendar className="w-4 h-4 mr-2" />
+                  Bookings
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/payments">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/payments') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Payments
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+          </NavigationMenuList>
+        </NavigationMenu>
       </div>
 
       <div className="flex items-center gap-2">
@@ -97,6 +252,11 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/settings')}>
+                <Settings className="mr-2 h-4 w-4" />
+                <span>Settings</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
               <DropdownMenuItem onClick={logout}>
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>

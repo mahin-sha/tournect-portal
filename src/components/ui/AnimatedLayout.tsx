@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -12,16 +11,14 @@ interface AnimatedLayoutProps {
 
 const AnimatedLayout: React.FC<AnimatedLayoutProps> = ({ children }) => {
   const location = useLocation();
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   
   // Handle sidebar state based on screen size
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setSidebarOpen(false);
-      } else {
-        setSidebarOpen(true);
-      }
+      // Keep sidebar closed by default even on larger screens
+      // since we now have navigation in the top bar
+      setSidebarOpen(false);
     };
     
     // Set initial state
