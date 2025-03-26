@@ -14,6 +14,7 @@ interface DashboardCardProps {
     isPositive: boolean;
   };
   className?: string;
+  style?: React.CSSProperties;
 }
 
 const DashboardCard: React.FC<DashboardCardProps> = ({
@@ -23,9 +24,10 @@ const DashboardCard: React.FC<DashboardCardProps> = ({
   icon: Icon,
   trend,
   className,
+  style,
 }) => {
   return (
-    <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)}>
+    <Card className={cn("overflow-hidden transition-all hover:shadow-md", className)} style={style}>
       <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
         <CardTitle className="text-sm font-medium">{title}</CardTitle>
         {Icon && (
