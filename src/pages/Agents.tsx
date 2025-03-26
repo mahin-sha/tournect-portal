@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-import { Users, Search, Filter, ArrowDownUp, Plus, Mail, Phone, Wallet } from 'lucide-react';
+import { Users, Search, Filter, ArrowDownUp, Plus, Mail, Phone, Wallet, UserPlus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { AddUserDialog } from '@/components/agents/AddUserDialog';
 
 // Mock data for agents
 const agentsData = [
@@ -88,6 +89,15 @@ const getInitials = (name: string) => {
 
 const AgentsPage = () => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedAgentId, setSelectedAgentId] = useState('');
+  const [selectedAgentName, setSelectedAgentName] = useState('');
+  const [showAddUserDialog, setShowAddUserDialog] = useState(false);
+  
+  const handleAddUser = (agentId: string, agentName: string) => {
+    setSelectedAgentId(agentId);
+    setSelectedAgentName(agentName);
+    setShowAddUserDialog(true);
+  };
   
   return (
     <div className="animate-fade-in">
@@ -219,6 +229,11 @@ const AgentsPage = () => {
                               <Button variant="ghost" size="icon" className="h-8 w-8">
                                 <Wallet className="h-4 w-4" />
                               </Button>
+                              <Button variant="ghost" size="icon" className="h-8 w-8" 
+                                onClick={() => handleAddUser(agent.id, agent.name)}
+                                title="Add User">
+                                <UserPlus className="h-4 w-4" />
+                              </Button>
                               <Button variant="outline" size="sm">View</Button>
                             </div>
                           </td>
@@ -290,6 +305,13 @@ const AgentsPage = () => {
           </Card>
         </TabsContent>
       </Tabs>
+
+      <AddUserDialog 
+        open={showAddUserDialog}
+        onOpenChange={setShowAddUserDialog}
+        agentId={selectedAgentId}
+        agentName={selectedAgentName}
+      />
     </div>
   );
 };
