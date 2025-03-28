@@ -1,13 +1,12 @@
-
 import React, { useState } from 'react';
 import { 
-  Button, 
   Card, 
   CardContent, 
   CardHeader, 
   CardTitle,
   CardDescription
 } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -39,7 +38,7 @@ import {
   Car, 
   Bus, 
   TrainFront, 
-  TaxiFront, 
+  Taxi, 
   Plus, 
   Trash2, 
   Edit 
@@ -98,7 +97,7 @@ const vehicleIcons: Record<string, React.ElementType> = {
   'SUV': Car,
   'Minibus': Bus,
   'Coach Bus': Bus,
-  'Taxi': TaxiFront,
+  'Taxi': Taxi,
   'Train': TrainFront
 };
 
@@ -151,13 +150,11 @@ const TransportManagement: React.FC<TransportManagementProps> = ({
     };
     
     if (editingOption) {
-      // Update existing option
       setTransportOptions(transportOptions.map(option => 
         option.id === editingOption.id ? { ...newOption, id: option.id } : option
       ));
       setEditingOption(null);
     } else {
-      // Add new option
       setTransportOptions([...transportOptions, newOption]);
     }
     
