@@ -30,7 +30,7 @@ const AuthContext = createContext<AuthContextType>({
   logout: () => {},
 });
 
-// Mock user data for demo
+// Mock user data for fallback
 const MOCK_USERS = [
   {
     id: '1',
@@ -79,27 +79,49 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoading(true);
     
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      // Try to authenticate with the API
+      const response = await fetch('https://localhost:7000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
       
-      // Find user by email and password
-      const foundUser = MOCK_USERS.find(
-        u => u.email === email && u.password === password
-      );
-      
-      if (!foundUser) {
-        throw new Error('Invalid credentials');
+      // If API call fails, fall back to mock users for development
+      if (!response.ok) {
+        console.warn('API login failed, falling back to mock users for development');
+        
+        // Find user by email and password in mock data
+        const foundUser = MOCK_USERS.find(
+          u => u.email === email && u.password === password
+        );
+        
+        if (!foundUser) {
+          throw new Error('Invalid credentials');
+        }
+        
+        // Remove password before storing
+        const { password: _, ...userWithoutPassword } = foundUser;
+        
+        // Store user in state and localStorage
+        setUser(userWithoutPassword);
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        
+        toast.success(`Welcome back, ${userWithoutPassword.name}`);
+        return;
       }
       
-      // Remove password before storing
-      const { password: _, ...userWithoutPassword } = foundUser;
+      // API call succeeded
+      const data = await response.json();
       
-      // Store user in state and localStorage
-      setUser(userWithoutPassword);
-      localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+      // Store user data from API
+      setUser(data.user);
+      localStorage.setItem('user', JSON.stringify(data.user));
       
-      toast.success(`Welcome back, ${userWithoutPassword.name}`);
+      toast.success(`Welcome back, ${data.user.name}`);
     } catch (error) {
+      console.error('Login error:', error);
       toast.error('Login failed. Please check your credentials.');
       throw error;
     } finally {

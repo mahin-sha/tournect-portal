@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import Navbar from '@/components/layout/Navbar';
 import SideNav from '@/components/layout/SideNav';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/context/AuthContext';
 
 interface AnimatedLayoutProps {
   children: React.ReactNode;
@@ -12,6 +14,7 @@ interface AnimatedLayoutProps {
 const AnimatedLayout: React.FC<AnimatedLayoutProps> = ({ children }) => {
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAuthenticated } = useAuth();
   
   // Handle sidebar state based on screen size
   useEffect(() => {
@@ -31,16 +34,26 @@ const AnimatedLayout: React.FC<AnimatedLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Don't render navigation for login page or unauthenticated users
+  const showNavigation = isAuthenticated && location.pathname !== '/login';
+
   return (
     <div className="min-h-screen bg-background">
-      <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
-      <SideNav isOpen={sidebarOpen} />
+      {showNavigation && (
+        <>
+          <Navbar toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+          <SideNav isOpen={sidebarOpen} />
+        </>
+      )}
       
       <main className={cn(
-        "pt-16 min-h-screen transition-all duration-300",
-        sidebarOpen ? "pl-64" : "pl-16"
+        "min-h-screen transition-all duration-300",
+        showNavigation ? "pt-16" : "",
+        showNavigation && sidebarOpen ? "pl-64" : showNavigation ? "pl-16" : ""
       )}>
-        <div className="container py-6 px-4 md:px-6 max-w-7xl mx-auto">
+        <div className={cn(
+          showNavigation ? "container py-6 px-4 md:px-6 max-w-7xl mx-auto" : "w-full h-full"
+        )}>
           <TransitionGroup component={null}>
             <CSSTransition
               key={location.pathname}
