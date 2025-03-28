@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   Card, 
@@ -38,7 +39,7 @@ import {
   Car, 
   Bus, 
   TrainFront, 
-  Taxi, 
+  CarTaxiFront, 
   Plus, 
   Trash2, 
   Edit 
@@ -97,7 +98,7 @@ const vehicleIcons: Record<string, React.ElementType> = {
   'SUV': Car,
   'Minibus': Bus,
   'Coach Bus': Bus,
-  'Taxi': Taxi,
+  'Taxi': CarTaxiFront,
   'Train': TrainFront
 };
 
