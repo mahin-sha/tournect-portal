@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -12,7 +11,8 @@ import {
   BarChart, 
   Settings,
   CreditCard,
-  Calendar
+  Calendar,
+  FileText
 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
@@ -59,14 +59,15 @@ const SideNav: React.FC<SideNavProps> = ({ isOpen }) => {
   const { user } = useAuth();
   
   const navItems = [
-    { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+    { to: '/', label: 'Admin Dashboard', icon: LayoutDashboard },
+    { to: '/dashboard', label: 'Analytics', icon: BarChart },
     { to: '/attractions', label: 'Attractions', icon: Map },
     { to: '/tickets', label: 'Tickets', icon: Ticket },
     { to: '/agents', label: 'Agents', icon: Users },
     { to: '/wallet', label: 'Wallet', icon: Wallet },
     { to: '/bookings', label: 'Bookings', icon: Calendar },
     { to: '/payments', label: 'Payments', icon: CreditCard },
-    { to: '/reports', label: 'Reports', icon: BarChart },
+    { to: '/accounts', label: 'Accounts', icon: FileText },
     { to: '/settings', label: 'Settings', icon: Settings },
   ];
 

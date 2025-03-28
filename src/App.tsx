@@ -19,6 +19,7 @@ import Bookings from "./pages/Bookings";
 import Payments from "./pages/Payments";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
+import Accounts from "./pages/Accounts";
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,14 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <AnimatedLayout>
             <AdminDashboard />
+          </AnimatedLayout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <AnimatedLayout>
+            <Index />
           </AnimatedLayout>
         </ProtectedRoute>
       } />
@@ -92,6 +101,14 @@ const AppRoutes = () => {
         <ProtectedRoute>
           <AnimatedLayout>
             <Payments />
+          </AnimatedLayout>
+        </ProtectedRoute>
+      } />
+      
+      <Route path="/accounts" element={
+        <ProtectedRoute>
+          <AnimatedLayout>
+            <Accounts />
           </AnimatedLayout>
         </ProtectedRoute>
       } />

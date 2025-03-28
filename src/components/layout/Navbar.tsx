@@ -19,7 +19,8 @@ import {
   CreditCard,
   BarChart,
   Settings,
-  UserPlus
+  UserPlus,
+  FileText
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -72,17 +73,42 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
         <NavigationMenu className="hidden md:flex">
           <NavigationMenuList>
             <NavigationMenuItem>
-              <NavLink to="/">
-                <NavigationMenuLink 
-                  className={cn(
-                    navigationMenuTriggerStyle(),
-                    isActive('/') && "bg-accent text-accent-foreground"
-                  )}
-                >
-                  <LayoutDashboard className="w-4 h-4 mr-2" />
-                  Dashboard
-                </NavigationMenuLink>
-              </NavLink>
+              <NavigationMenuTrigger className={isActive('/') || isActive('/dashboard') ? "bg-accent text-accent-foreground" : ""}>
+                <LayoutDashboard className="w-4 h-4 mr-2" />
+                Dashboard
+              </NavigationMenuTrigger>
+              <NavigationMenuContent>
+                <ul className="grid w-[200px] gap-2 p-2">
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <NavLink 
+                        to="/" 
+                        className={cn(
+                          "flex items-center gap-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
+                          isActive('/') && "bg-accent text-accent-foreground"
+                        )}
+                      >
+                        <LayoutDashboard className="w-4 h-4" />
+                        <span>Admin Dashboard</span>
+                      </NavLink>
+                    </NavigationMenuLink>
+                  </li>
+                  <li>
+                    <NavigationMenuLink asChild>
+                      <NavLink 
+                        to="/dashboard" 
+                        className={cn(
+                          "flex items-center gap-2 p-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors",
+                          isActive('/dashboard') && "bg-accent text-accent-foreground"
+                        )}
+                      >
+                        <BarChart className="w-4 h-4" />
+                        <span>Analytics Dashboard</span>
+                      </NavLink>
+                    </NavigationMenuLink>
+                  </li>
+                </ul>
+              </NavigationMenuContent>
             </NavigationMenuItem>
             
             <NavigationMenuItem>
@@ -193,6 +219,20 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
                   Payments
+                </NavigationMenuLink>
+              </NavLink>
+            </NavigationMenuItem>
+            
+            <NavigationMenuItem>
+              <NavLink to="/accounts">
+                <NavigationMenuLink 
+                  className={cn(
+                    navigationMenuTriggerStyle(),
+                    isActive('/accounts') && "bg-accent text-accent-foreground"
+                  )}
+                >
+                  <FileText className="w-4 h-4 mr-2" />
+                  Accounts
                 </NavigationMenuLink>
               </NavLink>
             </NavigationMenuItem>
