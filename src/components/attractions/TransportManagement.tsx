@@ -37,7 +37,7 @@ import {
 } from '@/components/ui/table';
 import { 
   Car, 
-  Bus, 
+  BusFront, 
   TrainFront, 
   CarTaxiFront, 
   Plus, 
@@ -78,7 +78,7 @@ const mockTransportOptions = [
     capacity: 12,
     description: 'Mini bus with comfortable seating for small groups.',
     isAvailable: true,
-    icon: Bus
+    icon: BusFront
   },
   {
     id: 4,
@@ -88,7 +88,7 @@ const mockTransportOptions = [
     capacity: 30,
     description: 'Large coach bus with AC and reclining seats.',
     isAvailable: false,
-    icon: Bus
+    icon: BusFront
   }
 ];
 
@@ -96,8 +96,8 @@ const mockTransportOptions = [
 const vehicleIcons: Record<string, React.ElementType> = {
   'Sedan': Car,
   'SUV': Car,
-  'Minibus': Bus,
-  'Coach Bus': Bus,
+  'Minibus': BusFront,
+  'Coach Bus': BusFront,
   'Taxi': CarTaxiFront,
   'Train': TrainFront
 };
